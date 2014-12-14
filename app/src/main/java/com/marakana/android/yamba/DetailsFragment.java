@@ -28,7 +28,6 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // ��ת֮ǰputExtra
         long id = getActivity().getIntent().getLongExtra(
                 StatusContract.Column.ID, -1);
         updateView(id);

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,7 +36,6 @@ public class RefreshService extends IntentService {
     // 在一个工作线程上执行，使用IntentService的目的
     @Override
     protected void onHandleIntent(Intent intent) {
-
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
         final String username = prefs.getString("username", "");
@@ -44,8 +44,21 @@ public class RefreshService extends IntentService {
         // Check that username and password are not empty
         // 检查用户名和密码是否不为空
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please update your username and password",
-                    Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Please update your username and password");
+            // Toast.makeText(getApplicationContext(),
+            //         "Please update your username and password",
+            //         Toast.LENGTH_LONG).show();
+            
+            // create a handler to post messages to the main thread
+            Handler mHandler = new Handler(getMainLooper());
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(),
+                            "Please update your username and password",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
             return;
         }
         Log.d(TAG, "onStarted");
@@ -86,6 +99,7 @@ public class RefreshService extends IntentService {
             Log.e(TAG, "Failed to fetch the timeline", e);
             e.printStackTrace();
         }
+        Log.d(TAG, "onHandleIntent");
         return;
     }
 
