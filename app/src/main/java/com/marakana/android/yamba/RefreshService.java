@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,16 +18,10 @@ import java.util.List;
 
 public class RefreshService extends IntentService {
 
-    static final String TAG = RefreshService.class.getSimpleName();
+    private static final String TAG = RefreshService.class.getSimpleName();
 
     public RefreshService() {
         super(TAG);
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
     }
 
     // 当服务首次被创建时调用
@@ -38,22 +31,17 @@ public class RefreshService extends IntentService {
         Log.d(TAG, "onCreated");
     }
 
-    // @Override
-    // public int onStartCommand(Intent intent, int flags, int startId) {
-    // super.onStartCommand(intent, flags, startId);
-    // Log.d(TAG, "onStartCommand");
-    // return START_STICKY;
-    // }
-
+    // Executes on a worker thread
     // 在一个工作线程上执行，使用IntentService的目的
     @Override
     protected void onHandleIntent(Intent intent) {
 
         SharedPreferences prefs = PreferenceManager
                 .getDefaultSharedPreferences(this);
-        final String username = prefs.getString("username", "student");
-        final String password = prefs.getString("password", "password");
+        final String username = prefs.getString("username", "");
+        final String password = prefs.getString("password", "");
 
+        // Check that username and password are not empty
         // 检查用户名和密码是否不为空
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, "Please update your username and password",
@@ -76,19 +64,24 @@ public class RefreshService extends IntentService {
                 values.put(StatusContract.Column.ID, status.getId());
                 values.put(StatusContract.Column.USER, status.getUser());
                 values.put(StatusContract.Column.MESSAGE, status.getMessage());
-                values.put(StatusContract.Column.CREATED_AT, status.getCreatedAt().getTime());
-                Uri uri = getContentResolver().insert(StatusContract.CONTENT_URI, values);
+                values.put(StatusContract.Column.CREATED_AT, status
+                        .getCreatedAt().getTime());
+                Uri uri = getContentResolver().insert(
+                        StatusContract.CONTENT_URI, values);
                 if (uri != null) {
-                    count++; // 如果有新消息，则递增计数器
+                    count++;  // 如果有新消息，则递增计数器
                     Log.d(TAG,
                             String.format("%s: %s", status.getUser(),
                                     status.getMessage()));
                 }
-                if (count > 0) {
-                    // 在至少发布了一条新消息的情况下，发送一个广播给那些关注它的人
-                    sendBroadcast(new Intent("com.yangdm.android.yamba.action.NEW_STATUSES").putExtra("count", count));
-                }
             }
+
+            if (count > 0) {
+                // 在至少发布了一条新消息的情况下，发送一个广播给那些关注它的人
+                sendBroadcast(new Intent("com.marakana.android.yamba.action.NEW_STATUSES")
+                        .putExtra("count", count));
+            }
+
         } catch (YambaClientException e) {
             Log.e(TAG, "Failed to fetch the timeline", e);
             e.printStackTrace();
@@ -99,7 +92,7 @@ public class RefreshService extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+        Log.d(TAG, "onDestroyed");
     }
 
 }

@@ -6,15 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class DbHelper extends SQLiteOpenHelper {
-
     private static final String TAG = DbHelper.class.getSimpleName();
 
     public DbHelper(Context context) {
         super(context, StatusContract.DB_NAME, null, StatusContract.DB_VERSION);
     }
 
-    // Called only once first time we create the database
-    // 只在我们首次创建数据库时调用一次
+    // Called only once first time we create the database 只在我们首次创建数据库时调用一次
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = String

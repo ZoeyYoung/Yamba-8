@@ -36,12 +36,11 @@ public class StatusFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater
-                .inflate(R.layout.fragment_status, null, false);
+        View v = inflater.inflate(R.layout.fragment_status, null, false);
 
-        mButtonTweet = (Button) v.findViewById(R.id.buttonTweet);
-        mTextStatus = (EditText) v.findViewById(R.id.editStatus);
-        mTextCount = (TextView) v.findViewById(R.id.textCount);
+        mButtonTweet = (Button) v.findViewById(R.id.status_button_tweet);
+        mTextStatus = (EditText) v.findViewById(R.id.status_text);
+        mTextCount = (TextView) v.findViewById(R.id.status_text_count);
         mTextCount.setText(Integer.toString(140));
         mDefaultColor = mTextCount.getTextColors().getDefaultColor();
 
@@ -49,7 +48,8 @@ public class StatusFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String status = mTextStatus.getText().toString();
-                new PostTask().execute(status);
+                PostTask postTask = new PostTask();
+                postTask.execute(status);
                 Log.d(TAG, "onClicked with status: " + status);
             }
         });
@@ -111,9 +111,9 @@ public class StatusFragment extends Fragment {
                         new Intent(getActivity(), SettingsActivity.class));
                 return "Please update your username and password";
             }
-            YambaClient yambaCloud = new YambaClient(username, password);
+            YambaClient cloud = new YambaClient(username, password);
             try {
-                yambaCloud.postStatus(params[0]);
+                cloud.postStatus(params[0]);
                 Log.d(TAG, "Successfully posted to the cloud: " + params[0]);
                 return "Successfully posted";
             } catch (YambaClientException e) {
@@ -123,12 +123,12 @@ public class StatusFragment extends Fragment {
             }
         }
 
+        // Called after doInBackground() on UI thread
         @Override
         protected void onPostExecute(String result) {
             progress.dismiss();
             if (getActivity() != null && result != null) {
-                Toast.makeText(getActivity(), result,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), result, Toast.LENGTH_LONG).show();
             }
         }
 

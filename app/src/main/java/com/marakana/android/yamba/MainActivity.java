@@ -34,22 +34,21 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                break;
+                return true;
             case R.id.action_tweet:
                 // 对应AndroidMainfest.xml中定义的<action android:name="com.yangdm.android.yamba.action.tweet" />
-                startActivity(new Intent("com.yangdm.android.yamba.action.tweet"));
-                break;
+                startActivity(new Intent("com.marakana.android.yamba.action.tweet"));
+                return true;
             case R.id.action_refresh:
                 startService(new Intent(this, RefreshService.class));
-                break;
+                return true;
             case R.id.action_purge:
                 int rows = getContentResolver().delete(StatusContract.CONTENT_URI, null, null);
                 Toast.makeText(this, "Deleted " + rows + " rows", Toast.LENGTH_LONG).show();
-                break;
+                return true;
             default:
                 return false;
         }
-        return true;
     }
 
 }

@@ -13,15 +13,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name">
+        <activity android:name="com.marakana.android.yamba.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StatusActivity"
+            android:name="com.marakana.android.yamba.StatusActivity"
             android:label="@string/status_update">
             <intent-filter>
                 <action android:name="com.marakana.android.yamba.action.tweet" />
@@ -38,31 +37,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/action_settings" />
+            android:name="com.marakana.android.yamba.SettingsActivity"
+            android:label="@string/action_settings"></activity>
+        <activity android:name="com.marakana.android.yamba.DetailsActivity"></activity>
 
-        <service android:name=".RefreshService" />
+        <service android:name="com.marakana.android.yamba.RefreshService"></service>
 
         <provider
-            android:name=".StatusProvider"
+            android:name="com.marakana.android.yamba.StatusProvider"
             android:authorities="com.marakana.android.yamba.StatusProvider"
             android:exported="false" />
 
-        <activity
-            android:name=".DetailsActivity"
-            android:label="@string/title_activity_details"></activity>
-
-        <receiver android:name=".BootReceiver">
+        <receiver android:name="com.marakana.android.yamba.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.marakana.android.yamba.action.UPDATED_INTERVAL" />
+            </intent-filter>
         </receiver>
         <receiver
-            android:name=".NotificationReceiver"
-            android:enabled="false"
-            android:exported="false"></receiver>
+            android:name="com.marakana.android.yamba.NotificationReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.marakana.android.yamba.action.NEW_STATUSES" />
+            </intent-filter>
+        </receiver>
         <receiver
-            android:name=".YambaWidget"
+            android:name="com.marakana.android.yamba.YambaWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.marakana.android.yamba.action.NEW_STATUSES" />
@@ -75,7 +77,6 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/yamba_widget" />
         </receiver>
-
     </application>
 
 </manifest>

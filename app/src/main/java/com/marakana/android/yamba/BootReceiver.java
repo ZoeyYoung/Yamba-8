@@ -18,7 +18,8 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // 当某个意图与这个接收器相匹配时，调用这个方法
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
         long interval = Long.parseLong(prefs.getString("interval",
                 Long.toString(DEFAULT_INTERVAL)));
         Log.d(TAG, "interval " + interval);
@@ -27,7 +28,8 @@ public class BootReceiver extends BroadcastReceiver {
                 new Intent(context, RefreshService.class),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) context
+                .getSystemService(Context.ALARM_SERVICE);
         if (interval == 0) {
             alarmManager.cancel(operation);
             Log.d(TAG, "cancelling repeat operation");
@@ -36,7 +38,7 @@ public class BootReceiver extends BroadcastReceiver {
                     System.currentTimeMillis(), interval, operation);
             Log.d(TAG, "setting repeat operation for: " + interval);
         }
-        //context.startService(new Intent(context, RefreshService.class));
+
         Log.d(TAG, "onReceived");
     }
 }

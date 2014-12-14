@@ -10,9 +10,12 @@
         android:key="password"
         android:summary="@string/password_summary"
         android:title="@string/password" />
-    <EditTextPreference
-        android:key="refresh"
-        android:summary="@string/refresh_interval_summary"
-        android:title="@string/refresh_interval" />
+
+    <ListPreference
+        android:entries="@array/interval_names"
+        android:entryValues="@array/interval_values"
+        android:key="interval"
+        android:summary="@string/interval_summary"
+        android:title="@string/interval" />
 
 </PreferenceScreen>

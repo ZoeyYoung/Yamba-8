@@ -2,7 +2,6 @@ package com.marakana.android.yamba;
 
 import android.os.Bundle;
 
-
 public class DetailsActivity extends SubActivity {
 
     @Override
@@ -19,5 +18,4 @@ public class DetailsActivity extends SubActivity {
                     .commit();
         }
     }
-
 }
